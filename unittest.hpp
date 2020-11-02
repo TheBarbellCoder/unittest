@@ -19,6 +19,8 @@ struct TestSummary{
 
 #define EXPECT_EQ(arg1, arg2) isTrue &= (arg1 == arg2);
 
+#define RETURN_STATUS (TestSummary::False > 0) ? -1 : 0;
+
 #ifdef FORK
 
 #define BEGIN_TEST(TestSuite, TestName)                                       \
@@ -80,32 +82,30 @@ struct TestSummary{
                                                                               \
    bool ret = test__##module##__##name();                                     \
    std::cout << std::left << std::setfill('-')                                \
-   << std::setw(50) << #module "-->" #name " ";                               \
+   << std::setw(50) << #module " -> " #name " ";                               \
                                                                               \
    if(ret)                                                                    \
    {                                                                          \
       TestSummary::True += 1;                                                 \
       std::cout << std::setw(10)                                              \
-      << std::left << "\x1b[38;5;40m   OK \x1b[0m" << "\n"                    \
-      << std::endl;                                                           \
+      << std::left << "\x1b[38;5;40m   OK \x1b[0m" << "\n" << std::endl;      \
    }                                                                          \
    else                                                                       \
    {                                                                          \
       TestSummary::False += 1;                                                \
       std::cout << std::setw(10)                                              \
-      << std::left << "\x1b[38;5;160m   FAILED \x1b[0m" << "\n"               \
-      << std::endl;                                                           \
+      << std::left << "\x1b[38;5;160m   FAILED \x1b[0m" << "\n" << std::endl; \
    }                                                                          \
 }
 
 #define RUN_TEST_SUMMARY                                                      \
-   std::cout << std::setfill('-') << std::setw(80) << "\n" << std::endl;      \
-   std::cout << "Tests Passed : " << std::setfill(' ') << std::setw(10)       \
-   << "\x1b[38;5;40m" << TestSummary::True << "\x1b[0m" << "\n" << std::endl; \
-                                                                              \
-   std::cout << "Tests Failed : " << std::setfill(' ') << std::setw(10)       \
-   << "\x1b[38;5;160m" << TestSummary::False << "\x1b[0m" << "\n"             \
+   std::cout << std::setw(80) << std::left << std::setfill('-') << "\n"       \
    << std::endl;                                                              \
-   std::cout << std::setfill('-') << std::setw(80) << std::endl;              \
+   std::cout << "Tests Passed : " << "\x1b[38;5;40m" << TestSummary::True     \
+   << "\x1b[0m" << std::endl;                                                 \
+                                                                              \
+   std::cout << "Tests Failed : " << "\x1b[38;5;160m" << TestSummary::False   \
+   << "\x1b[0m" << std::endl;                                                 \
+   std::cout << std::left << std::setfill('-') << std::setw(80) << std::endl;
 
 #endif
