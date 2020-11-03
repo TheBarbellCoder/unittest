@@ -19,12 +19,14 @@ struct TestSummary{
 
 #define EXPECT_EQ(arg1, arg2) isTrue &= (arg1 == arg2);
 
-#define RETURN_STATUS (TestSummary::False > 0) ? -1 : 0;
+#define TEST_STATUS (TestSummary::False > 0) ? -1 : 0;
+
+#define TEST(TestSuite, TestName) bool test_##TestSuite##_##TestName(void);
 
 #ifdef FORK
 
 #define BEGIN_TEST(TestSuite, TestName)                                       \
-   bool test__##TestSuite##__##TestName(void)                                 \
+   bool test_##TestSuite##_##TestName(void)                                   \
 {                                                                             \
       bool ret;                                                               \
       pid_t pid = fork();                                                     \
@@ -80,9 +82,9 @@ struct TestSummary{
 #define RUN_TEST(module, name)                                                \
 {                                                                             \
                                                                               \
-   bool ret = test__##module##__##name();                                     \
+   bool ret = test_##module##_##name();                                       \
    std::cout << std::left << std::setfill('-')                                \
-   << std::setw(50) << #module " -> " #name " ";                               \
+   << std::setw(50) << #module " -> " #name " ";                              \
                                                                               \
    if(ret)                                                                    \
    {                                                                          \
