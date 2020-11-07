@@ -69,7 +69,7 @@ struct TestSummary{
 #else
 
 #define BEGIN_TEST(module, name)                                              \
-   bool test__##module##__##name(void)                                        \
+   bool test_##module##_##name(void)                                          \
 {                                                                             \
    bool isTrue{true};
 

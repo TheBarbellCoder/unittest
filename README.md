@@ -31,7 +31,7 @@ Here's how you can use UnitTest in your project.
 ./test/unittest`
 
 - Create a header file to declare your tests.
-```
+```cpp
 //sample_test.hpp
 
 TEST(Suite1, Name1)
@@ -40,7 +40,7 @@ TEST(Suite2, Name2)
 ```
 
 - Create a source file to define all your test cases.
-```
+```cpp
 // sample_test.cpp
 
 BEGIN_TEST(Suite1, Name1){
@@ -58,7 +58,7 @@ BEGIN_TEST(Suite2, Name2){
 ...
 ```
 - Create a source file to run all tests.
-```
+```cpp
 // test_main.cpp
 
 #include "unittest/unittest.hpp"
