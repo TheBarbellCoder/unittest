@@ -1,10 +1,10 @@
 # UnitTest
 
-__A minimal unit-testing framework for C++ projects__
+__A minimal unit-testing framework for C++__ 
 
 ## Features
 
-The project defines the following basic *MACROS* to construct test cases.
+The project defines the following basic *5 MACROS* to construct test cases.
 
 | MACROS | Description |
 | :---- | :---- |
@@ -14,67 +14,69 @@ The project defines the following basic *MACROS* to construct test cases.
 | `RunTests` | Executes all registerd tests |
 | `ExpectEQ(arg1, arg2)` | Checks if two arguments are equal |
 
+## Importing `Unittest` to Your Project
+
+- Method 1 
+```
+1. Pull the repository as a submodule in your project
+`git submodule add https://github.com/TheBarbellCoder/unittest.git ./test/unittest`
+
+2. Add `./test/unittest` as a subdirectory in the root CMakeLists.txt in your project
+`add_subdirectory("test/unittest")`
+
+3. Build it with your CMake project
+```
+- Method 2
+```
+1. Import repository directly into your project using CMake's `FetchContent` module
+2. Add the repo as a subdirectory with `add_subdirectory` the your project's root CMakeLists.txt
+3. Build as usual
+```
+
 ## Sample Usage
 
-Here's how you can use UnitTest in your project.
-
-- Pull the repository as a submodule in your project. <br>
-`git submodule add git@gitlab.com:AvinashRavishankar/unittest.git
-./test/unittest`
-
-- Create a header and a source file to declare and define your test cases.
+Here's how you'd use `UnitTest` in your project.
 ```cpp
-//sample_test.hpp
-
-#include "unittest.hpp"
-
-DeclareTest(Suit1, Name1)
-DeclareTest(Suit2, Name2)
-...
-
-
-//sample_test.cpp
-
-#include "sample_test.hpp"
-
-DefineTest(Suite1, Name1)
-{
-   // Define your test case here
-}
-DefineTest(Suite2, Name2)
-{
-   // Define your test case here
-}
-...
-```
-
-- Create a main source file to register and run all tests.
-```cpp
-// test_main.cpp
-
-#include "sample_test.hpp"
+// File: test_main.cpp
+#include "test_project.hpp"
 
 int main(){
-
-   RegisterTest(Suite1, Name1)
-   RegisterTest(Suite2, Name2)
-   ...
-   ...
-
-   RunTests()
-
-   return 0;
+    RegisterTest(module, test1)
+    RegisterTest(module, test2)
+    
+    RunTests()
+	
+    return 0;
 }
 ```
+```cpp
+/ File: test_project.cpp
+#include "test_project.hpp"
 
-- Add `unittest.cpp` to the list of source to be compiled, and you are good to
-  go!
+DefineTest(module, test1){
+    
+    // Your code here
+    // ...
+    // ExpectEQ(<actual>, <expected>)
+}
 
-## Thread Safety
+DefineTest(module, test2){
 
-UnitTest allows *forking* test cases to run them in separate threads. This
-way, when a test case crashes, it dosen't bring down the entire program.
+    // Your code here
+    // ...
+    // ExpectEQ(<actual>, <expected>)
+}
+```
+```cpp
+// File: test_project.hpp
+#include "unittest.hpp"
 
-Forking is disabled by default and is currently available to _unix-like_ OS. To
-enable it, simply define `FORK` in your main test source file or append
-`-DFORK` to your compile command! :relaxed:
+DeclareTest(module, test1)
+DeclareTest(module, test2)
+```
+
+## Running Tests in Isolated Processes
+
+UnitTest allows *forking* test cases to run them in separate processes. This way, when a test case crashes, due to an unhandled exception or segfault, it dosen't bring down the entire program.
+
+Forking is disabled by default and is currently available to _*nix_ systems. To enable it, simply define `FORK` in your main test source file or append `-DFORK` to your CMake command! :relaxed:
