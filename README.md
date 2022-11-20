@@ -1,6 +1,6 @@
 # UnitTest
 
-__A minimal unit-testing framework for C++__ 
+__A minimal unit-testing library for C++__ 
 
 ## Features
 
@@ -17,21 +17,35 @@ The project defines the following basic *5 MACROS* to construct test cases.
 ## Importing `Unittest` to Your Project
 
 - Method 1 
-```
-1. Pull the repository as a submodule in your project
-`git submodule add https://github.com/TheBarbellCoder/unittest.git ./test/unittest`
+    1. Pull the repository as a submodule in your project
+    ```git
+    git submodule add https://github.com/TheBarbellCoder/unittest.git ./test/unittest
+    ```
+    2. Add the following lines in CMakeLists.txt of your project
+    ```cmake
+    add_subdirectory(test/unittest)
+    ...
 
-2. Add `./test/unittest` as a subdirectory in the root CMakeLists.txt in your project
-`add_subdirectory("test/unittest")`
+    target_include_directories(<your_project> PRIVATE test/unittest/includes)
+    target_link_libraries(<your_project> unittest)
+    ```
 
-3. Build it with your CMake project
-```
 - Method 2
-```
-1. Import repository directly into your project using CMake's `FetchContent` module
-2. Add the repo as a subdirectory with `add_subdirectory` the your project's root CMakeLists.txt
-3. Build as usual
-```
+    1. Import repository directly into your project using the `FetchContent` module from cmake
+    ```cmake
+    include(FetchContent)
+    FetchContent_Declare(Unittest 
+            GIT_REPOSITORY https://github.com/TheBarbellCoder/unittest.git)
+    FetchContent_MakeAvailable(Unittest)
+    ```
+    2. Repeat steps 2 and 3 from _Method 1_
+    ```cmake
+    add_subdirectory(${unittest_SOURCE_DIR} ${uniitest_BINARY_DIR})
+    ...
+
+    target_include_directories(<your_project> PRIVATE ${unittest_SOURCE_DIR}/includes)
+    target_link_libraries(<your_project> ${unittest_BINARY_DIR}/unittest)
+    ```
 
 ## Sample Usage
 
@@ -43,25 +57,25 @@ Here's how you'd use `UnitTest` in your project.
 int main(){
     RegisterTest(module, test1)
     RegisterTest(module, test2)
-    
+
     RunTests()
-	
+
     return 0;
 }
 ```
 ```cpp
-/ File: test_project.cpp
+// File: test_project.cpp
 #include "test_project.hpp"
 
 DefineTest(module, test1){
-    
+
     // Your code here
     // ...
     // ExpectEQ(<actual>, <expected>)
 }
 
 DefineTest(module, test2){
-
+    
     // Your code here
     // ...
     // ExpectEQ(<actual>, <expected>)
